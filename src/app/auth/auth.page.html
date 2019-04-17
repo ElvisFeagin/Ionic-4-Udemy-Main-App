@@ -18,7 +18,14 @@
                 name="email"
                 required
                 email
+                #emailCtrl="ngModel"
               ></ion-input>
+            </ion-item>
+            <ion-item
+              *ngIf="!emailCtrl.valid && emailCtrl.touched"
+              lines="none"
+            >
+              <ion-label>Should be a valid email address.</ion-label>
             </ion-item>
             <ion-item>
               <ion-label position="floating">Password</ion-label>
@@ -28,7 +35,14 @@
                 name="password"
                 required
                 minLength="6"
+                #passwordCtrl="ngModel"
               ></ion-input>
+            </ion-item>
+            <ion-item
+              *ngIf="!passwordCtrl.valid && passwordCtrl.touched"
+              lines="none"
+            >
+              <ion-label>Should be at least 6 characters long.</ion-label>
             </ion-item>
           </ion-list>
         </ion-col>
@@ -43,6 +57,7 @@
             color="primary"
             (click)="onLogin()"
             expand="block"
+            [disabled]="!f.valid"
           >
             Login
           </ion-button>
