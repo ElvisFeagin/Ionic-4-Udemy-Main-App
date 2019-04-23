@@ -17,8 +17,7 @@ export class BookingsPage implements OnInit, OnDestroy {
   constructor(private bookingService: BookingService) {}
 
   ngOnInit() {
-    // Here should store the subscription in bookingSub property
-    this.bookingService.bookings.subscribe(bookings => {
+    this.bookingSub = this.bookingService.bookings.subscribe(bookings => {
       this.loadedBookings = bookings;
     });
   }
