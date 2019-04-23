@@ -12,6 +12,7 @@ import { Place } from '../../place.model';
 import { PlacesService } from '../../places.service';
 import { CreateBookingComponent } from '../../../bookings/create-booking/create-booking.component';
 import { BookingService } from '../../../bookings/booking.service';
+import { AuthService } from '../../../auth/auth.service';
 
 @Component({
   selector: 'app-place-detail',
@@ -20,6 +21,7 @@ import { BookingService } from '../../../bookings/booking.service';
 })
 export class PlaceDetailPage implements OnInit, OnDestroy {
   place: Place;
+  isBookable = false;
   private placeSub: Subscription;
 
   constructor(
@@ -29,7 +31,8 @@ export class PlaceDetailPage implements OnInit, OnDestroy {
     private modalCtrl: ModalController,
     private actionSheetCtrl: ActionSheetController,
     private bookingService: BookingService,
-    private loadingCtrl: LoadingController
+    private loadingCtrl: LoadingController,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -42,6 +45,7 @@ export class PlaceDetailPage implements OnInit, OnDestroy {
         .getPlace(paramMap.get('placeId'))
         .subscribe(place => {
           this.place = place;
+          this.isBookable = place.userId !== this.authService.userId;
         });
     });
   }
@@ -92,18 +96,20 @@ export class PlaceDetailPage implements OnInit, OnDestroy {
             .then(loadingEl => {
               loadingEl.present();
               const data = resultData.data.bookingData;
-              this.bookingService.addBooking(
-                this.place.id,
-                this.place.title,
-                this.place.imageUrl,
-                data.firstName,
-                data.lastName,
-                data.guestNumber,
-                data.startDate,
-                data.endDate
-              ).subscribe(() => {
-                loadingEl.dismiss()
-              });
+              this.bookingService
+                .addBooking(
+                  this.place.id,
+                  this.place.title,
+                  this.place.imageUrl,
+                  data.firstName,
+                  data.lastName,
+                  data.guestNumber,
+                  data.startDate,
+                  data.endDate
+                )
+                .subscribe(() => {
+                  loadingEl.dismiss();
+                });
             });
         }
       });
