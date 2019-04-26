@@ -7,7 +7,8 @@ import {
   Renderer2
 } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { addListener } from 'cluster';
+
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-map-modal',
@@ -51,7 +52,6 @@ export class MapModalComponent implements OnInit, AfterViewInit {
   onCancel() {
     this.modalCtrl.dismiss();
   }
-  map;
 
   private getGoogleMaps(): Promise<any> {
     const win = window as any;
@@ -62,7 +62,8 @@ export class MapModalComponent implements OnInit, AfterViewInit {
     return new Promise((resolve, reject) => {
       const script = document.createElement('script');
       script.src =
-        'https://maps.googleapis.com/maps/api/js?key=AIzaSyBuEsmdENk9bHZHJZgbYKaGulT6QNoH_WY';
+        'https://maps.googleapis.com/maps/api/js?key=' +
+        environment.googleMapsAPIKey;
       script.async = true;
       script.defer = true;
       document.body.appendChild(script);
