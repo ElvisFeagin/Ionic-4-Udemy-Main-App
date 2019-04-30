@@ -2,8 +2,5 @@
   "appId": "com.udemycours.ionicangula",
   "appName": "ionic-angular-course",
   "bundledWebRuntime": false,
-  "webDir": "www",
-  "server": {
-    "url": "http://10.0.1.4:8100"
-  }
+  "webDir": "www"
 }
