@@ -32,6 +32,8 @@
         <ion-img
           class="location-image"
           [src]="place.location.staticMapImageUrl"
+          role="button"
+          (click)="onShowFullMap()"
         ></ion-img>
       </ion-col>
     </ion-row>
