@@ -87,13 +87,14 @@ export class NewOfferPage implements OnInit {
     } else {
       imageFile = imageData;
     }
-    this.form.patchValue({ image: imageFile})
+    this.form.patchValue({ image: imageFile });
   }
 
   onCreateOffer() {
-    if (!this.form.valid) {
+    if (!this.form.valid || !this.form.get('image').value) {
       return;
     }
+    console.log(this.form.value);
     this.loadingCtrl
       .create({
         message: 'Creating place...'
