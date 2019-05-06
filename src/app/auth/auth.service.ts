@@ -27,7 +27,7 @@ export class AuthService {
     return this._user.asObservable().pipe(
       map(user => {
         if (user) {
-          return Boolean(user.token);
+          return !!user.token;
         } else {
           return false;
         }
@@ -79,7 +79,7 @@ export class AuthService {
         }
       }),
       map(user => {
-        return Boolean(user);
+        return !!user;
       })
     );
   }
@@ -101,7 +101,7 @@ export class AuthService {
         `https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=${
           environment.firebaseAPIKey
         }`,
-        { email: email, password: password }
+        { email: email, password: password, returnSecureToken: true }
       )
       .pipe(tap(this.setUserData.bind(this)));
   }
@@ -112,32 +112,35 @@ export class AuthService {
 
   private setUserData(userData: AuthResponseData) {
     const expirationTime = new Date(
-      new Date().getTime() + Number(userData.expiresIn) * 1000
+      new Date().getTime() + +userData.expiresIn * 1000
     );
     this._user.next(
       new User(
         userData.localId,
-        userData.idToken,
         userData.email,
+        userData.idToken,
         expirationTime
       )
     );
     this.storeAuthData(
       userData.localId,
       userData.idToken,
-      expirationTime.toDateString()
+      expirationTime.toISOString(),
+      userData.email
     );
   }
 
   private storeAuthData(
     userId: string,
     token: string,
-    tokenExpirationDate: string
+    tokenExpirationDate: string,
+    email: string
   ) {
     const data = JSON.stringify({
       userId: userId,
       token: token,
-      tokenExpirationDate: tokenExpirationDate
+      tokenExpirationDate: tokenExpirationDate,
+      email: email
     });
     Plugins.Storage.set({ key: 'authData', value: data });
   }

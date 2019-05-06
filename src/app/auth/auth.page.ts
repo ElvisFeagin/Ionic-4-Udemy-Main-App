@@ -44,6 +44,7 @@ export class AuthPage implements OnInit {
             this.router.navigateByUrl('/places/tabs/discover');
           },
           errRes => {
+            console.log(errRes);
             loadingEl.dismiss();
             const code = errRes.error.error.message;
             let message = 'Could not sign you up, please try again.';
