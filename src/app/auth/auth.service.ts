@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
+import { Plugins } from '@capacitor/core';
 
 import { environment } from '../../environments/environment';
 import { User } from './user.model';
@@ -86,5 +87,23 @@ export class AuthService {
         expirationTime
       )
     );
+    this.storeAuthData(
+      userData.localId,
+      userData.idToken,
+      expirationTime.toISOString()
+    );
+  }
+
+  private storeAuthData(
+    userId: string,
+    token: string,
+    tokenExpirationDate: string
+  ) {
+    const data = JSON.stringify({
+      userId: userId,
+      token: token,
+      tokenExpirationDate: tokenExpirationDate
+    });
+    Plugins.Storage.set({ key: 'authData', value: data });
   }
 }
